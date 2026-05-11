@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plan d'Action — Automatisation Avenants ADEO</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1a2e;
+    --ink-soft: #334155;
+    --muted: #6b7280;
+    --faint: #e5e7eb;
+    --bg: #ffffff;
+    --bg-alt: #f8fafc;
+    --red: #ef4444;
+    --red-bg: #fef2f2;
+    --red-border: #fca5a5;
+    --amber: #f59e0b;
+    --amber-bg: #fff7ed;
+    --amber-border: #fdba74;
+    --green: #22c55e;
+    --green-bg: #f0fdf4;
+    --green-border: #86efac;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Instrument Sans', 'DM Sans', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 32px 20px 60px;
+  }
+
+  /* Header */
+  .header {
+    border-bottom: 3px solid var(--ink);
+    padding-bottom: 20px;
+    margin-bottom: 32px;
+  }
+  .header-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+  .header h1 {
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 4px 0;
+  }
+  .header-date {
+    font-size: 14px;
+    color: var(--muted);
+    margin-top: 6px;
+  }
+
+  /* Global progress */
+  .global-progress {
+    background: var(--ink);
+    color: #fff;
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .global-progress-text {
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    opacity: 0.7;
+  }
+  .global-progress-pct {
+    font-size: 36px;
+    font-weight: 700;
+    line-height: 1;
+  }
+  .global-progress-bar-wrap {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .global-progress-bar {
+    width: 100%;
+    height: 8px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .global-progress-bar-fill {
+    height: 100%;
+    background: var(--green);
+    border-radius: 4px;
+    transition: width 0.4s ease;
+  }
+  .global-progress-detail {
+    font-size: 12px;
+    opacity: 0.6;
+  }
+
+  /* Objectif */
+  .objectif {
+    background: var(--bg-alt);
+    border: 1px solid var(--faint);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 28px;
+  }
+  .objectif-title {
+    font-weight: 700;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--ink-soft);
+    margin-bottom: 8px;
+  }
+  .objectif-text {
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+  }
+
+  /* Rituels */
+  .section-title {
+    font-weight: 700;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--ink-soft);
+    margin-bottom: 12px;
+  }
+  .rituals-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 28px;
+  }
+  @media (max-width: 500px) {
+    .rituals-grid { grid-template-columns: 1fr; }
+  }
+  .ritual-card {
+    background: #fafafa;
+    border: 1px solid var(--faint);
+    border-radius: 8px;
+    padding: 10px 12px;
+  }
+  .ritual-label {
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .ritual-desc {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  /* Week accordion */
+  .week {
+    margin-bottom: 10px;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--faint);
+    transition: border-color 0.2s;
+  }
+  .week.open {
+    border: 2px solid var(--ink);
+  }
+  .week-header {
+    padding: 14px 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    user-select: none;
+    background: var(--bg);
+    transition: background 0.2s, color 0.2s;
+  }
+  .week.open .week-header {
+    background: var(--ink);
+    color: #fff;
+  }
+  .week-tag {
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    flex-shrink: 0;
+  }
+  .week-info {
+    flex: 1;
+    min-width: 0;
+  }
+  .week-dates {
+    font-size: 12px;
+    font-weight: 600;
+    opacity: 0.7;
+  }
+  .week-title {
+    font-size: 14px;
+    font-weight: 600;
+    margin-top: 1px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .week-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+  .week-bar {
+    width: 48px;
+    height: 6px;
+    background: var(--faint);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .week.open .week-bar {
+    background: rgba(255,255,255,0.2);
+  }
+  .week-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    background: var(--ink);
+    transition: width 0.3s;
+  }
+  .week.open .week-bar-fill {
+    background: #fff;
+  }
+  .week-bar-fill.complete {
+    background: var(--green) !important;
+  }
+  .week-pct {
+    font-size: 12px;
+    font-weight: 600;
+    min-width: 32px;
+    text-align: right;
+  }
+  .week-chevron {
+    font-size: 16px;
+    transition: transform 0.2s;
+  }
+  .week.open .week-chevron {
+    transform: rotate(180deg);
+  }
+
+  /* Tasks */
+  .week-tasks {
+    padding: 12px 18px 16px;
+    display: none;
+  }
+  .week.open .week-tasks {
+    display: block;
+  }
+  .task {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 12px;
+    margin-bottom: 6px;
+    border-radius: 8px;
+    border: 1px solid;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .task:hover {
+    transform: translateX(2px);
+  }
+  .task.critical { background: var(--red-bg); border-color: var(--red-border); }
+  .task.high { background: var(--amber-bg); border-color: var(--amber-border); }
+  .task.medium { background: var(--green-bg); border-color: var(--green-border); }
+  .task.done {
+    background: var(--green-bg) !important;
+    border-color: var(--green-border) !important;
+    opacity: 0.7;
+  }
+
+  .task-check {
+    width: 20px;
+    height: 20px;
+    border-radius: 5px;
+    border: 2px solid #cbd5e1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+    background: #fff;
+    transition: all 0.15s;
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff;
+  }
+  .task.done .task-check {
+    background: var(--green);
+    border-color: var(--green);
+  }
+
+  .task-text {
+    flex: 1;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--ink-soft);
+  }
+  .task.done .task-text {
+    text-decoration: line-through;
+    color: var(--muted);
+  }
+
+  .task-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 6px;
+  }
+  .task-dot.critical { background: var(--red); }
+  .task-dot.high { background: var(--amber); }
+  .task-dot.medium { background: var(--green); }
+  .task.done .task-dot { background: var(--green) !important; }
+
+  /* Legend */
+  .legend {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    margin-top: 20px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .legend-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+
+  /* Reset button */
+  .reset-wrap {
+    text-align: center;
+    margin-top: 24px;
+  }
+  .reset-btn {
+    font-family: inherit;
+    font-size: 12px;
+    color: var(--muted);
+    background: none;
+    border: 1px solid var(--faint);
+    border-radius: 6px;
+    padding: 6px 14px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .reset-btn:hover {
+    border-color: var(--red);
+    color: var(--red);
+  }
+
+  /* Animation */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .week { animation: fadeIn 0.3s ease both; }
+  .week:nth-child(1) { animation-delay: 0.05s; }
+  .week:nth-child(2) { animation-delay: 0.1s; }
+  .week:nth-child(3) { animation-delay: 0.15s; }
+  .week:nth-child(4) { animation-delay: 0.2s; }
+  .week:nth-child(5) { animation-delay: 0.25s; }
+  .week:nth-child(6) { animation-delay: 0.3s; }
+  .week:nth-child(7) { animation-delay: 0.35s; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div class="header-label">Plan d'action</div>
+    <h1>Automatisation Avenants ADEO</h1>
+    <div class="header-date">11 mai → 27 juin 2026 · 7 semaines</div>
+  </div>
+
+  <div class="global-progress">
+    <div>
+      <div class="global-progress-text">Progression</div>
+      <div class="global-progress-pct" id="globalPct">0%</div>
+    </div>
+    <div class="global-progress-bar-wrap">
+      <div class="global-progress-bar">
+        <div class="global-progress-bar-fill" id="globalBar" style="width:0%"></div>
+      </div>
+      <div class="global-progress-detail" id="globalDetail">0 / 35 tâches</div>
+    </div>
+  </div>
+
+  <div class="objectif">
+    <div class="objectif-title">🎯 Objectif fin juin</div>
+    <div class="objectif-text">Tous les avenants HRBP automatisés et opérationnels · FAQ Prompts & guides livrés · Passation complète à Morine · Sheet Amélioration à jour</div>
+  </div>
+
+  <div class="section-title">Rituels récurrents</div>
+  <div class="rituals-grid">
+    <div class="ritual-card"><div class="ritual-label">🔁 Point hebdo Morine</div><div class="ritual-desc">Suivi avancement + passation (30 min)</div></div>
+    <div class="ritual-card"><div class="ritual-label">📋 MAJ Sheet Amélioration</div><div class="ritual-desc">Chaque vendredi — statut + nouveaux axes</div></div>
+    <div class="ritual-card"><div class="ritual-label">📝 FAQ Prompt</div><div class="ritual-desc">À chaque avenant livré — rédiger avant de passer au suivant</div></div>
+    <div class="ritual-card"><div class="ritual-label">🧪 Test HRBP</div><div class="ritual-desc">Avant mise en prod — validation terrain obligatoire</div></div>
+  </div>
+
+  <div class="section-title" style="margin-bottom:16px">Semaine par semaine</div>
+  <div id="timeline"></div>
+
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:var(--red)"></div> Critique</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--amber)"></div> Important</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div> Normal</div>
+  </div>
+
+  <div class="reset-wrap">
+    <button class="reset-btn" onclick="resetAll()">Réinitialiser toutes les tâches</button>
+  </div>
+
+</div>
+
+<script>
+const WEEKS = [
+  {
+    id: "s20", label: "S20 · 11–16 mai", tag: "SPRINT", tagColor: "#ef4444",
+    title: "Finaliser Avenant Changement de Poste ± RVI",
+    tasks: [
+      { text: "Terminer les modifications du script Changement de Poste avec/sans RVI", p: "critical" },
+      { text: "Tester le formulaire complet (cas avec RVI + cas sans RVI)", p: "critical" },
+      { text: "Valider la génération du document côté Drive (balises, mise en forme)", p: "high" },
+      { text: "Faire relire/tester par Morine avant mise en prod", p: "high" },
+      { text: "Mettre à jour le Sheet « Amélioration Automatisation » avec le statut", p: "medium" }
+    ]
+  },
+  {
+    id: "s21", label: "S21 · 19–23 mai", tag: "BUILD", tagColor: "#f59e0b",
+    title: "Lancer le prochain avenant + cadrer la passation",
+    tasks: [
+      { text: "Identifier le prochain avenant prioritaire (Maternité/Paternité ? Mobilité Douce ?)", p: "high" },
+      { text: "Poser le point récurrent avec Morine (créneau hebdo fixe)", p: "critical" },
+      { text: "Définir le format du suivi de passation (qui reprend quoi, à quelle échéance)", p: "high" },
+      { text: "Commencer le développement du 2e avenant — structure Form + Sheet + Script", p: "medium" },
+      { text: "Rédiger la FAQ / guide prompt pour l'avenant Changement de Poste (livrable passation)", p: "medium" }
+    ]
+  },
+  {
+    id: "s22", label: "S22 · 26–30 mai", tag: "BUILD", tagColor: "#f59e0b",
+    title: "Avancer sur le 2e avenant + FAQ Prompt",
+    tasks: [
+      { text: "Finaliser le script du 2e avenant (logique métier + génération doc)", p: "critical" },
+      { text: "Créer la FAQ Prompt associée au 2e avenant", p: "high" },
+      { text: "Mettre à jour les codes Apps Script existants (maintenance / correctifs remontés)", p: "medium" },
+      { text: "Point passation avec Morine — revue du 1er avenant livré", p: "high" },
+      { text: "Alimenter le Sheet Amélioration Automatisation (axes identifiés en cours de dev)", p: "medium" }
+    ]
+  },
+  {
+    id: "s23", label: "S23 · 2–6 juin", tag: "BUILD", tagColor: "#f59e0b",
+    title: "3e sujet d'avenant + consolidation docs",
+    tasks: [
+      { text: "Lancer le développement du 3e avenant (Positive Impact Day ou Changement Horaire)", p: "high" },
+      { text: "Tests utilisateurs du 2e avenant avec un HRBP pilote", p: "critical" },
+      { text: "Consolider toutes les FAQ Prompts dans un document unique", p: "medium" },
+      { text: "Point passation Morine — transfert progressif du 2e avenant", p: "high" },
+      { text: "Documenter l'architecture technique globale (schéma Form → Sheet → Script → Drive)", p: "medium" }
+    ]
+  },
+  {
+    id: "s24", label: "S24 · 9–13 juin", tag: "BUILD", tagColor: "#f59e0b",
+    title: "Finaliser le 3e avenant + itérations",
+    tasks: [
+      { text: "Terminer le script du 3e avenant", p: "high" },
+      { text: "Intégrer les retours HRBP sur le 2e avenant (correctifs)", p: "high" },
+      { text: "Mettre à jour la FAQ Prompt du 3e avenant", p: "medium" },
+      { text: "Point passation Morine — autonomie progressive sur les 3 premiers sujets", p: "high" },
+      { text: "Revue globale du Sheet Amélioration — prioriser les derniers sujets", p: "medium" }
+    ]
+  },
+  {
+    id: "s25", label: "S25 · 16–20 juin", tag: "BUILD", tagColor: "#f59e0b",
+    title: "4e avenant + mise en production progressive",
+    tasks: [
+      { text: "Développer le 4e (et dernier ?) avenant", p: "high" },
+      { text: "Mettre en production les avenants 2 et 3 auprès des HRBP", p: "critical" },
+      { text: "Former Morine sur la maintenance des scripts (debug, ajout balises, modification GRH)", p: "critical" },
+      { text: "Centraliser tous les codes Apps Script sur un Drive/compte générique", p: "high" },
+      { text: "Mettre à jour les FAQ Prompts avec les cas edge remontés en prod", p: "medium" }
+    ]
+  },
+  {
+    id: "s26", label: "S26 · 23–27 juin", tag: "LIVRAISON", tagColor: "#22c55e",
+    title: "Clôture, passation complète, bilan",
+    tasks: [
+      { text: "Finaliser et mettre en prod le dernier avenant", p: "critical" },
+      { text: "Livrer le dossier complet : FAQ Prompts + Guides + Architecture + Sheet Amélioration", p: "critical" },
+      { text: "Point final passation Morine — validation d'autonomie sur tous les sujets", p: "critical" },
+      { text: "Rédiger un bilan synthétique (temps gagné, volumétrie, adoption)", p: "high" },
+      { text: "Archiver proprement les versions de code et la documentation technique", p: "medium" }
+    ]
+  }
+];
+
+const STORAGE_KEY = "adeo_plan_checked";
+let checked = {};
+
+// Load from localStorage
+try {
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if (saved) checked = JSON.parse(saved);
+} catch(e) {}
+
+function save() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(checked));
+}
+
+function totalTasks() {
+  return WEEKS.reduce((s, w) => s + w.tasks.length, 0);
+}
+
+function totalDone() {
+  return Object.values(checked).filter(Boolean).length;
+}
+
+function weekProgress(week) {
+  const done = week.tasks.filter((_, i) => checked[week.id + "-" + i]).length;
+  return Math.round((done / week.tasks.length) * 100);
+}
+
+function updateGlobal() {
+  const done = totalDone();
+  const total = totalTasks();
+  const pct = Math.round((done / total) * 100);
+  document.getElementById("globalPct").textContent = pct + "%";
+  document.getElementById("globalBar").style.width = pct + "%";
+  document.getElementById("globalDetail").textContent = done + " / " + total + " tâches";
+}
+
+function updateWeekUI(weekId) {
+  const week = WEEKS.find(w => w.id === weekId);
+  const pct = weekProgress(week);
+  const bar = document.querySelector(`[data-bar="${weekId}"]`);
+  const pctEl = document.querySelector(`[data-pct="${weekId}"]`);
+  if (bar) {
+    bar.style.width = pct + "%";
+    bar.classList.toggle("complete", pct === 100);
+  }
+  if (pctEl) pctEl.textContent = pct + "%";
+}
+
+function toggleTask(weekId, idx) {
+  const key = weekId + "-" + idx;
+  checked[key] = !checked[key];
+  save();
+
+  const taskEl = document.querySelector(`[data-task="${key}"]`);
+  if (taskEl) taskEl.classList.toggle("done", checked[key]);
+
+  updateWeekUI(weekId);
+  updateGlobal();
+}
+
+function toggleWeek(weekId) {
+  const el = document.querySelector(`[data-week="${weekId}"]`);
+  const isOpen = el.classList.contains("open");
+  // Close all
+  document.querySelectorAll(".week").forEach(w => w.classList.remove("open"));
+  // Open clicked if wasn't open
+  if (!isOpen) el.classList.add("open");
+}
+
+function resetAll() {
+  if (!confirm("Réinitialiser toutes les tâches cochées ?")) return;
+  checked = {};
+  save();
+  document.querySelectorAll(".task").forEach(t => t.classList.remove("done"));
+  WEEKS.forEach(w => updateWeekUI(w.id));
+  updateGlobal();
+}
+
+function render() {
+  const timeline = document.getElementById("timeline");
+  let html = "";
+
+  WEEKS.forEach((week, wi) => {
+    const pct = weekProgress(week);
+    const isFirst = wi === 0;
+
+    html += `<div class="week ${isFirst ? 'open' : ''}" data-week="${week.id}">`;
+    html += `<div class="week-header" onclick="toggleWeek('${week.id}')">`;
+    html += `<span class="week-tag" style="background:${week.tagColor}">${week.tag}</span>`;
+    html += `<div class="week-info">`;
+    html += `<div class="week-dates">${week.label}</div>`;
+    html += `<div class="week-title">${week.title}</div>`;
+    html += `</div>`;
+    html += `<div class="week-meta">`;
+    html += `<div class="week-bar"><div class="week-bar-fill ${pct===100?'complete':''}" data-bar="${week.id}" style="width:${pct}%"></div></div>`;
+    html += `<span class="week-pct" data-pct="${week.id}">${pct}%</span>`;
+    html += `<span class="week-chevron">▾</span>`;
+    html += `</div></div>`;
+
+    html += `<div class="week-tasks">`;
+    week.tasks.forEach((task, i) => {
+      const key = week.id + "-" + i;
+      const isDone = checked[key];
+      html += `<div class="task ${task.p} ${isDone ? 'done' : ''}" data-task="${key}" onclick="toggleTask('${week.id}', ${i})">`;
+      html += `<div class="task-check">${isDone ? '✓' : ''}</div>`;
+      html += `<div class="task-text">${task.text}</div>`;
+      html += `<div class="task-dot ${task.p}"></div>`;
+      html += `</div>`;
+    });
+    html += `</div></div>`;
+  });
+
+  timeline.innerHTML = html;
+  updateGlobal();
+}
+
+render();
+</script>
+</body>
+</html>
